@@ -248,7 +248,10 @@ def test_cli_setup_authority():
     assert os.path.exists("/run/nginx.pid"), "nginx wasn't started up properly"
 
     # Make sure we generated legit CA certificate
-    from certidude import config, authority, auth, user
+    from certidude.authority import Authority
+    from certidude import config
+    authority = Authority(config)
+    from certidude import auth, user
     assert authority.certificate.serial_number >= 0x100000000000000000000000000000000000000
     assert authority.certificate.serial_number <= 0xfffffffffffffffffffffffffffffffffffffff
     assert authority.certificate["tbs_certificate"]["validity"]["not_before"].native.replace(tzinfo=None) < datetime.utcnow()

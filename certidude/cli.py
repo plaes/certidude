@@ -94,7 +94,9 @@ def setup_client(prefix="client_", dh=False):
 def certidude_enroll(fork, renew, no_wait, kerberos, skip_self):
     if not skip_self and os.path.exists(const.SERVER_CONFIG_PATH):
         click.echo("Self-enrolling authority's web interface certificate")
-        from certidude import authority
+        from certidude.authority import Authority
+        from certidude import config
+        authority = Authority(config)
         authority.self_enroll()
 
     from jinja2 import Environment, PackageLoader
@@ -1195,7 +1197,9 @@ def certidude_setup_authority(username, kerberos_keytab, nginx_config, country, 
         sys.exit(0) # stop this fork here
     else:
         os.waitpid(bootstrap_pid, 0)
-        from certidude import authority
+        from certidude.authority import Authority
+        from certidude import config
+        authority = Authority(config)
         authority.self_enroll()
         assert os.getuid() == 0 and os.getgid() == 0, "Enroll contaminated environment"
         click.echo("To enable e-mail notifications install Postfix as sattelite system and set mailer address in %s" % const.SERVER_CONFIG_PATH)
@@ -1239,7 +1243,9 @@ def certidude_list(verbose, show_key_type, show_extensions, show_path, show_sign
     #   y - not valid yet
     #   r - revoked
     from humanize import naturaltime
-    from certidude import authority
+    from certidude.authority import Authority
+    from certidude import config
+    authority = Authority(config)
 
     def dump_common(common_name, path, cert):
         click.echo("certidude revoke %s" % common_name)
@@ -1310,7 +1316,9 @@ def certidude_list(verbose, show_key_type, show_extensions, show_path, show_sign
 @click.argument("common_name")
 @click.option("--overwrite", "-o", default=False, is_flag=True, help="Revoke valid certificate with same CN")
 def certidude_sign(common_name, overwrite):
-    from certidude import authority
+    from certidude.authority import Authority
+    from certidude import config
+    authority = Authority(config)
     drop_privileges()
     cert = authority.sign(common_name, overwrite=overwrite)
 
@@ -1318,14 +1326,19 @@ def certidude_sign(common_name, overwrite):
 @click.command("revoke", help="Revoke certificate")
 @click.argument("common_name")
 def certidude_revoke(common_name):
-    from certidude import authority
+    from certidude.authority import Authority
+    from certidude import config
+    authority = Authority(config)
     drop_privileges()
     authority.revoke(common_name)
 
 
 @click.command("expire", help="Move expired certificates")
 def certidude_expire():
-    from certidude import authority, config
+    from certidude.authority import Authority
+    from certidude import config
+    authority = Authority(config)
+
     threshold = datetime.utcnow() - timedelta(minutes=5) # Kerberos tolerance
     for common_name, path, buf, cert, signed, expires in authority.list_signed():
         if expires < threshold:
@@ -1346,7 +1359,9 @@ def certidude_expire():
 @click.option("-l", "--listen", default="127.0.1.1", help="Listen address")
 @click.option("-f", "--fork", default=False, is_flag=True, help="Fork to background")
 def certidude_serve(port, listen, fork):
-    from certidude import authority, const, push
+    from certidude import config, const, push
+    from certidude.authority import Authority
+    authority = Authority(config)
 
     if port == 80:
         click.echo("WARNING: Please run Certidude behind nginx, remote address is assumed to be forwarded by nginx!")

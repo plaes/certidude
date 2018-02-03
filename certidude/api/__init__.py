@@ -200,7 +200,9 @@ class NormalizeMiddleware(object):
         req.context["remote_addr"] = ipaddress.ip_address(req.access_route[0])
 
 def certidude_app(log_handlers=[]):
-    from certidude import authority, config
+    from certidude import config
+    from certidude.authority import Authority
+
     from .signed import SignedCertificateDetailResource
     from .request import RequestListResource, RequestDetailResource
     from .lease import LeaseResource, LeaseDetailResource
@@ -210,6 +212,8 @@ def certidude_app(log_handlers=[]):
     from .bootstrap import BootstrapResource
     from .token import TokenResource
     from .builder import ImageBuilderResource
+
+    authority = Authority(config)
 
     app = falcon.API(middleware=NormalizeMiddleware())
     app.req_options.auto_parse_form_urlencoded = True
