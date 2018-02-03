@@ -9,13 +9,13 @@ from asn1crypto.csr import CertificationRequest
 from base64 import b64decode
 from certidude import config, push, errors
 from certidude.auth import login_required, login_optional, authorize_admin
-from certidude.decorators import csrf_protection, MyEncoder
 from datetime import datetime
 from oscrypto import asymmetric
 from oscrypto.errors import SignatureError
 from xattr import getxattr
 from .utils import AuthorityHandler
 from .utils.firewall import whitelist_subnets, whitelist_content_types
+from .utils.decorators import csrf_protection, MyEncoder
 
 logger = logging.getLogger(__name__)
 

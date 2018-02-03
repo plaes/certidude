@@ -6,11 +6,11 @@ from asn1crypto.csr import CertificationRequest
 from datetime import datetime
 from time import time
 from certidude import mailer
-from certidude.decorators import serialize
 from certidude.user import User
 from certidude import config
 from certidude.auth import login_required, authorize_admin
 from .utils import AuthorityHandler
+from .utils.decorators import serialize
 
 logger = logging.getLogger(__name__)
 

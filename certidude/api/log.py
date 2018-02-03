@@ -1,7 +1,7 @@
 
 from certidude.auth import login_required, authorize_admin
-from certidude.decorators import serialize
 from certidude.relational import RelationalMixin
+from .utils.decorators import serialize
 
 class LogResource(RelationalMixin):
     SQL_CREATE_TABLES = "log_tables.sql"

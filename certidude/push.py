@@ -14,7 +14,7 @@ def publish(event_type, event_data=''):
     assert event_type, "No event type specified"
 
     if not isinstance(event_data, str):
-        from certidude.decorators import MyEncoder
+        from certidude.api.utils.decorators import MyEncoder
         event_data = json.dumps(event_data, cls=MyEncoder)
 
     url = config.EVENT_SOURCE_PUBLISH % config.EVENT_SOURCE_TOKEN

@@ -9,9 +9,9 @@ from datetime import datetime
 from xattr import listxattr, getxattr
 from certidude.auth import login_required
 from certidude.user import User
-from certidude.decorators import serialize, csrf_protection
 from certidude import const, config
 from .utils import AuthorityHandler
+from .utils.decorators import serialize, csrf_protection
 
 logger = logging.getLogger(__name__)
 

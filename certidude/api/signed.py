@@ -4,9 +4,9 @@ import logging
 import json
 import hashlib
 from certidude.auth import login_required, authorize_admin
-from certidude.decorators import csrf_protection
 from xattr import getxattr
 from .utils import AuthorityHandler
+from .utils.decorators import csrf_protection
 
 logger = logging.getLogger(__name__)
 
