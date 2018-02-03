@@ -21,4 +21,8 @@ script:
   - sudo coverage combine
   - sudo coverage report
   - sudo coverage xml -i
-cache: pip
+cache:
+  directories:
+    - $HOME/.cache/pip
+before_cache:
+  - rm -f $HOME/.cache/pip/log/debug.log
