@@ -1,7 +1,8 @@
-
 import falcon
 import logging
 from asn1crypto import pem, x509
+from ipaddress import ip_address
+from xattr import getxattr
 
 logger = logging.getLogger("api")
 
@@ -39,11 +40,8 @@ def whitelist_content_types(*content_types):
 
 def whitelist_subject(func):
     def wrapped(self, req, resp, cn, *args, **kwargs):
-        from ipaddress import ip_address
-        from certidude import authority
-        from xattr import getxattr
         try:
-            path, buf, cert, signed, expires = authority.get_signed(cn)
+            path, buf, cert, signed, expires = self.authority.get_signed(cn)
         except IOError:
             raise falcon.HTTPNotFound()
         else:
