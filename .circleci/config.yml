@@ -7,6 +7,7 @@ jobs:
   build:
     docker:
       - image: circleci/python:3.6-stretch
+        name: ca.example.lan
     steps:
       - checkout
       - restore_cache:
