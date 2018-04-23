@@ -54,9 +54,13 @@ def generate_csr(cn=None):
     request = builder.build(private_key)
     return pem_armor_csr(request)
 
+def assert_root(message=''):
+    assert os.getuid() == 0 and os.getgid() == 0, message
+
 
 def clean_client():
-    assert os.getuid() == 0 and os.getgid() == 0
+    assert_root()
+
     files = [
         "/etc/certidude/client.conf",
         "/etc/certidude/services.conf",
@@ -143,7 +147,7 @@ def clean_server():
     shutil.copyfile("/etc/resolv.conf.orig", "/etc/resolv.conf")
 
 def test_cli_setup_authority():
-    assert os.getuid() == 0, "Run tests as root in a clean VM or container"
+    assert_root("Run tests as root in a clean VM or container")
     assert check_output(["/bin/hostname", "-f"]) == b"ca.example.lan\n", "As a safety precaution, unittests only run in a machine whose hostanme -f  is ca.example.lan"
 
     os.system("apt-get install -q -y git build-essential python-dev libkrb5-dev")
@@ -232,15 +236,14 @@ def test_cli_setup_authority():
     # Bootstrap authority
     bootstrap_pid = os.fork() # TODO: this shouldn't be necessary
     if not bootstrap_pid:
-        assert os.getuid() == 0 and os.getgid() == 0
+        assert_root()
         result = runner.invoke(cli, ["setup", "authority"])
         assert not result.exception, result.output
         return
     else:
         os.waitpid(bootstrap_pid, 0)
 
-    assert os.getuid() == 0 and os.getgid() == 0, "Environment contaminated"
-
+    assert_root("Environment contaminated")
 
     # Make sure nginx is running
     assert os.system("nginx -t") == 0, "invalid nginx configuration"
