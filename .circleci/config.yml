@@ -5,9 +5,10 @@ general:
 version: 2
 jobs:
   build:
-    docker:
-      - image: circleci/python:3.6-stretch
-        name: ca.example.lan
+    #docker:
+    #  - image: circleci/python:3.6-stretch
+    #    name: ca.example.lan
+    machine: true
     steps:
       - checkout
       - restore_cache:
