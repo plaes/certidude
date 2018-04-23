@@ -1,0 +1,26 @@
+general:
+  branches:
+    only:
+      - circleci-dev
+version: 2
+jobs:
+  build:
+    docker:
+      - image: circleci/python:3.6-stretch
+    steps:
+      - checkout
+      - run:
+          command: |
+            python3 -m venv venv
+            . venv/bin/activate
+            pip install -r requirements.txt
+      ## TODO: Save cache
+      # XXX: Use this when we do not load configuration on import
+      # - run:
+      #     command: |
+      #       . venv/bin/activate
+      #       python setup.py test
+      - run:
+          command: |
+            . venv/bin/activate
+            py.test tests
