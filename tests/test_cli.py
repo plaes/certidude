@@ -157,11 +157,11 @@ def test_cli_setup_authority():
     assert not os.environ.get("KRB5_KTNAME"), "Environment contaminated"
 
     # Mock Fedora
-    for util in "/usr/bin/chcon", "/usr/bin/dnf", "/usr/bin/update-ca-trust", "/usr/sbin/dmidecode":
-        with open(util, "w") as fh:
-            fh.write("#!/bin/bash\n")
-            fh.write("exit 0\n")
-        os.chmod(util, 0o755)
+    # for util in "/usr/bin/chcon", "/usr/bin/dnf", "/usr/bin/update-ca-trust", "/usr/sbin/dmidecode":
+    #     with open(util, "w") as fh:
+    #         fh.write("#!/bin/bash\n")
+    #         fh.write("exit 0\n")
+    #     os.chmod(util, 0o755)
     if not os.path.exists("/etc/pki/ca-trust/source/anchors/"):
         os.makedirs("/etc/pki/ca-trust/source/anchors/")
 
