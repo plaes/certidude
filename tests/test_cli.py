@@ -55,7 +55,8 @@ def generate_csr(cn=None):
     return pem_armor_csr(request)
 
 def assert_root(message=''):
-    assert os.getuid() == 0 and os.getgid() == 0, message
+    if not os.getenv('CERTIDUDE_TESTS_ALLOW_USER'):
+        assert os.getuid() == 0 and os.getgid() == 0, message
 
 
 def clean_client():
